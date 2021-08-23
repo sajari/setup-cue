@@ -1,0 +1,35 @@
+name: Test action
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-new-version:
+    name: Test action (recent version)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    - uses: actions/checkout@v2
+    - name: setup-cue
+      uses: ./
+      with:
+        version: 0.4.0
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - run: cue version | grep 0.4.0
+  test-old-version:
+    name: Test action (older version)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    - uses: actions/checkout@v2
+    - name: setup-cue
+      uses: ./
+      with:
+        version: 0.2.1
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - run: cue version | grep 0.2.1
