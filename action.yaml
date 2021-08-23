@@ -1,0 +1,32 @@
+name: 'setup-cue'
+description: 'Sets up an environment with CUE'
+inputs:
+  version:
+    description: 'cue version, must be an exact version not a range or pattern'
+    required: true
+  github-token:
+    description: 'GitHub Token to use when downloading GitHub releases'
+    required: true
+outputs:
+  bin:
+    description: 'path to cue binary'
+    value: ${{ steps.download.outputs.bin }}
+runs:
+  using: "composite"
+  steps:
+  - id: download
+    shell: bash
+    env:
+      GITHUB_TOKEN: "${{ inputs.github-token }}"
+    run: |-
+      CUE_BIN_DIR="${{ runner.tool_cache }}/cue/${{ inputs.version }}/bin"
+      gh release download \
+        -D ${{ runner.temp }} \
+        -R cuelang/cue \
+        -p "cue_${{ inputs.version }}_${RUNNER_OS}_x86_64.tar.gz" \
+        -p "cue_v${{ inputs.version }}_${RUNNER_OS,,}_amd64.tar.gz" \
+        v${{ inputs.version }}
+      mkdir -p "${CUE_BIN_DIR}"
+      tar xzf ${{ runner.temp }}/cue*.tar.gz -C "${CUE_BIN_DIR}" cue
+      echo "::set-output name=bin::${CUE_BIN_DIR}/cue"
+      echo "${CUE_BIN_DIR}" >> "${GITHUB_PATH}"
