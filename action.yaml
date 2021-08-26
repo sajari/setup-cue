@@ -22,7 +22,7 @@ runs:
       CUE_BIN_DIR="${{ runner.tool_cache }}/cue/${{ inputs.version }}/bin"
       gh release download \
         -D ${{ runner.temp }} \
-        -R cuelang/cue \
+        -R cue-lang/cue \
         -p "cue_${{ inputs.version }}_${RUNNER_OS}_x86_64.tar.gz" \
         -p "cue_v${{ inputs.version }}_${RUNNER_OS,,}_amd64.tar.gz" \
         v${{ inputs.version }}
