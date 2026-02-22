@@ -28,5 +28,5 @@ runs:
         v${{ inputs.version }}
       mkdir -p "${CUE_BIN_DIR}"
       tar xzf ${{ runner.temp }}/cue*.tar.gz -C "${CUE_BIN_DIR}" cue
-      echo "::set-output name=bin::${CUE_BIN_DIR}/cue"
+      echo "bin=${CUE_BIN_DIR}/cue" >> $GITHUB_OUTPUT
       echo "${CUE_BIN_DIR}" >> "${GITHUB_PATH}"
